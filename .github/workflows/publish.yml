@@ -1,0 +1,70 @@
+# MANUAL SETUP REQUIRED:
+# To make this workflow work without storing a PyPI API token, you must configure
+# "Trusted Publishing" on PyPI for this GitHub repository.
+# 
+# 1. Log in to PyPI (pypi.org).
+# 2. Go to your account settings -> Publishing -> Add a new pending publisher.
+# 3. Enter your PyPI Project Name: okf-guard
+# 4. Owner: darshanNhb (your GitHub username)
+# 5. Repository name: okf-guard
+# 6. Workflow name: publish.yml (the name of this file)
+# 7. Environment name: (leave blank)
+# 8. Add the publisher.
+# 
+# Once that's done, anytime you push a tag matching v* (like v0.1.0), this workflow 
+# will run the tests, build the package, and automatically publish it to PyPI!
+
+name: Publish to PyPI
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev,all]
+          
+      - name: Run tests
+        run: pytest tests/
+
+  publish:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    # Required for PyPI trusted publishing
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+      contents: read
+      
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          
+      - name: Install build dependencies
+        run: python -m pip install build twine
+        
+      - name: Build package
+        run: python -m build
+        
+      - name: Verify package with twine
+        run: twine check dist/*
+        
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
