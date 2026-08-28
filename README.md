@@ -11,35 +11,72 @@ Depending on how you plan to use `okf-guard`, there are two recommended ways to 
 ### Option 1: Using it as a Command-Line Tool (CLI)
 If you just want to run the `okfguard` command in your terminal to scan files, the safest and best way to install it globally is using [pipx](https://pipx.pypa.io/). This automatically isolates the heavy dependencies (like PDF and Word parsers) so they don't break your system Python.
 
-1. Install `pipx` if you don't have it: `python -m pip install --user pipx`
-2. Install `okf-guard` with all document parsers:
-   ```bash
+Use these commands one by one (for Windows PowerShell):
+
+1. **Install pipx**
+   ```powershell
+   python -m pip install --user pipx
+   ```
+2. **Add pipx to your PATH**
+   ```powershell
+   python -m pipx ensurepath
+   ```
+   *Note: Close PowerShell and open a new PowerShell window after this command.*
+3. **Install OKF-Guard with all document parsers**
+   ```powershell
    pipx install "okf-guard[all]"
    ```
-3. Test that it works:
-   ```bash
+   This installs OKF-Guard in its own isolated environment.
+4. **Check that it installed correctly**
+   ```powershell
    okfguard --help
    ```
+   If you see the OKF-Guard help/usage information, you're done! ✅
+
+*(If `pipx` is not recognized after restarting, try running `python -m pipx install "okf-guard[all]"` instead).*
+
+> [!IMPORTANT]
+> For Option 1, you do NOT need to activate a venv. `pipx` creates and manages its own isolated environment.
 
 ### Option 2: Using it as a Python Library (For Developers)
-If you are writing Python code and want to import the `sanitize()` function into your own AI or RAG pipeline, you should install it inside your project's virtual environment using standard `pip`.
+If you are writing Python code and want to import the `sanitize()` function into your own AI or RAG pipeline, you should install it inside your project's virtual environment. 
 
-1. **Activate your project's virtual environment** (Crucial step!)
-   - Windows: `.\venv\Scripts\activate`
-   - Mac/Linux: `source venv/bin/activate`
-2. **Install the package:**
-   - To scan everything (PDF, Word, Excel, PowerPoint, HTML):
-     ```bash
-     pip install "okf-guard[all]"
-     ```
-   - Or, to install only specific parsers to save space:
-     ```bash
-     pip install "okf-guard[pdf,docx]"
-     ```
-   - Or, install the bare minimum (plain text only):
-     ```bash
-     pip install okf-guard
-     ```
+Follow these commands in order (for Windows PowerShell):
+
+1. **Go to your project folder**
+   ```powershell
+   cd "C:\path\to\your\project"
+   ```
+2. **Create a virtual environment (if you don't already have one)**
+   ```powershell
+   python -m venv venv
+   ```
+3. **Activate the virtual environment**
+   ```powershell
+   .\venv\Scripts\Activate.ps1
+   ```
+   You should now see something like `(venv) PS C:\...`
+4. **Upgrade pip**
+   ```powershell
+   python -m pip install --upgrade pip
+   ```
+5. **Install OKF-Guard with all document parsers**
+   ```powershell
+   pip install "okf-guard[all]"
+   ```
+   *(This is the recommended command if you want support for PDF, Word, Excel, PowerPoint, HTML, etc.)*
+6. **Verify the installation**
+   ```powershell
+   pip show okf-guard
+   ```
+7. **Test that Python can import it**
+   ```powershell
+   python -c "import okf_guard; print('OKF-Guard installed successfully')"
+   ```
+   If that prints `OKF-Guard installed successfully`, you're ready! ✅
+
+> [!IMPORTANT]
+> Unlike Option 1, Option 2 **does require** your virtual environment to be activated before installing the package.
 
 ## Quickstart (Python API)
 
