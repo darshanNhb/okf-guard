@@ -4,21 +4,42 @@ A content-safety scanning layer for OKF (Open Knowledge Format) generation pipel
 
 It prevents attackers from smuggling malicious instructions into the context windows of GenAI applications by exploiting features like white-on-white text, invisible rendering modes, or hidden spreadsheet rows.
 
-## Installation
+## Installation & Setup
 
-Install the core package (which can scan plain text natively):
+Depending on how you plan to use `okf-guard`, there are two recommended ways to install it to avoid common Python permission errors (like `WinError 2` or `Permission denied`).
 
-```bash
-pip install okf-guard
-```
+### Option 1: Using it as a Command-Line Tool (CLI)
+If you just want to run the `okfguard` command in your terminal to scan files, the safest and best way to install it globally is using [pipx](https://pipx.pypa.io/). This automatically isolates the heavy dependencies (like PDF and Word parsers) so they don't break your system Python.
 
-To support complex file formats, install the optional dependencies:
+1. Install `pipx` if you don't have it: `python -m pip install --user pipx`
+2. Install `okf-guard` with all document parsers:
+   ```bash
+   pipx install "okf-guard[all]"
+   ```
+3. Test that it works:
+   ```bash
+   okfguard --help
+   ```
 
-```bash
-pip install okf-guard[all]
-```
+### Option 2: Using it as a Python Library (For Developers)
+If you are writing Python code and want to import the `sanitize()` function into your own AI or RAG pipeline, you should install it inside your project's virtual environment using standard `pip`.
 
-You can also install specific parsers if you only process certain formats (e.g., `pip install okf-guard[pdf]`, `[docx]`, `[pptx]`, `[xlsx]`, or `[html]`).
+1. **Activate your project's virtual environment** (Crucial step!)
+   - Windows: `.\venv\Scripts\activate`
+   - Mac/Linux: `source venv/bin/activate`
+2. **Install the package:**
+   - To scan everything (PDF, Word, Excel, PowerPoint, HTML):
+     ```bash
+     pip install "okf-guard[all]"
+     ```
+   - Or, to install only specific parsers to save space:
+     ```bash
+     pip install "okf-guard[pdf,docx]"
+     ```
+   - Or, install the bare minimum (plain text only):
+     ```bash
+     pip install okf-guard
+     ```
 
 ## Quickstart (Python API)
 
