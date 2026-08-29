@@ -166,7 +166,7 @@ $ okfguard review --json-log scan_log.json
 
 1. **Screen Before Write**: Malicious content must be stopped *before* it enters the knowledge base. Once an injection is embedded in a trusted RAG database, it's virtually impossible to cleanly remove.
 2. **Hidden Content + Pattern Matching**: We don't just rely on regexes. We look for the *mechanisms* of smuggling (e.g., zero-width characters, white-on-white text, off-canvas shapes, hidden spreadsheet rows). If content is hidden from a human but visible to a parser, it is inherently suspicious.
-3. **Conservative Defaults**: v0.1.0 has no LLM-based secondary review layer, so the default thresholds (0.4 for quarantine, 0.8 for block) are tuned to prefer false positives over false negatives. It is safer to quarantine an ambiguously formatted document for human review than to let an attack slip through.
+3. **Conservative Defaults**: v0.1.0 has no LLM-based secondary review layer, so the default thresholds (0.4 for quarantine, 0.92 for block) are tuned to prefer false positives over false negatives. A single explicit hidden-content signal alone is quarantined for human review rather than auto-blocked; only corroborated signals (hidden content plus a pattern match, or hidden content in multiple places) escalate to a block. It is safer to quarantine an ambiguously formatted document for human review than to let an attack slip through.
 
 ## What v0.1.0 Does NOT Cover
 
